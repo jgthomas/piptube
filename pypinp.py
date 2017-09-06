@@ -16,8 +16,9 @@ MPV = ['mpv',
        ]
 
 
-STREAM_URL = '--ytdl-format (mp4)[height<=1080]/best[height<=1080]'
-
+STREAM_URL = ['--ytdl-format',
+              '(mp4)[height<=1080]/best[height<=1080]'
+              ]
 
 
 def play_local(filename):
@@ -26,9 +27,9 @@ def play_local(filename):
 
 
 def play_url(url):
-    MPV.append(STREAM_URL)
-    MPV.append(url)
-    subprocess.run(MPV)
+    command = MPV + STREAM_URL
+    command.append(url)
+    subprocess.run(command)
 
 
 def main(argv):
@@ -36,6 +37,8 @@ def main(argv):
 
     if os.path.isfile(to_play):
         play_local(to_play)
+    elif re.match(r'^http', to_play):
+        play_url(to_play)
 
 
 if __name__ == '__main__':
