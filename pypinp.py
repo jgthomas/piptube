@@ -22,13 +22,12 @@ STREAM_URL = ['--ytdl-format',
 
 
 def play_local(filename):
-    MPV.append(filename)
-    subprocess.run(MPV)
+    command = [*MPV, filename]
+    subprocess.run(command)
 
 
 def play_url(url):
-    command = MPV + STREAM_URL
-    command.append(url)
+    command = [*MPV, *STREAM_URL, url]
     subprocess.run(command)
 
 
