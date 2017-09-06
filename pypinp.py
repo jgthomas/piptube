@@ -32,6 +32,9 @@ def play_url(url):
 
 
 def main(argv):
+    if not argv:
+        sys.exit(1)
+
     to_play = argv[0]
 
     if os.path.isfile(to_play):
