@@ -5,6 +5,7 @@ import subprocess
 import os
 import sys
 import re
+import argparse
 
 
 MPV = ['mpv',
@@ -21,6 +22,12 @@ STREAM_URL = ['--ytdl-format',
               ]
 
 
+def get_args(args):
+    parser = argparse.ArgumentParser(description='Picture-in-picture video')
+    parser.add_argument('source', type=str, help='file or url to play')
+    return parser.parse_args(args)
+
+
 def play_local(filename):
     command = [*MPV, filename]
     subprocess.run(command)
@@ -32,10 +39,8 @@ def play_url(url):
 
 
 def main(argv):
-    if not argv:
-        sys.exit(1)
-
-    to_play = argv[0]
+    args = get_args(argv)
+    to_play = args.source
 
     if os.path.isfile(to_play):
         play_local(to_play)
