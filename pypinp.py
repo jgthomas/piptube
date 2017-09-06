@@ -33,9 +33,15 @@ def play_local(filename):
     subprocess.run(command)
 
 
-def play_url(url):
+def stream_url(url):
     command = [*MPV, *STREAM_URL, url]
     subprocess.run(command)
+
+
+#def stream_search(search):
+#    search = ['--get-url', f'ytsearch3:{search}']
+#    search_command = ["youtube-dl", *STREAM_URL, *search]
+#    search_results = subprocess.Popen(search_command, stdout=subprocess.PIPE)
 
 
 def main(argv):
@@ -45,7 +51,9 @@ def main(argv):
     if os.path.isfile(to_play):
         play_local(to_play)
     elif re.match(r'^http', to_play):
-        play_url(to_play)
+        stream_url(to_play)
+    else:
+        stream_search(to_play)
 
 
 if __name__ == '__main__':
