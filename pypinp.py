@@ -22,6 +22,9 @@ STREAM_URL = ['--ytdl-format',
               ]
 
 
+STREAM_SEARCH = ['--format', '(mp4)[height<=1080]/best[height<=1080]']
+
+
 def get_args(args):
     parser = argparse.ArgumentParser(description='Picture-in-picture video')
     parser.add_argument('source', type=str, help='file or url to play')
@@ -38,10 +41,13 @@ def stream_url(url):
     subprocess.run(command)
 
 
-#def stream_search(search):
-#    search = ['--get-url', f'ytsearch3:{search}']
-#    search_command = ["youtube-dl", *STREAM_URL, *search]
-#    search_results = subprocess.Popen(search_command, stdout=subprocess.PIPE)
+def stream_search(search):
+    search = ['--get-url', f'ytsearch3:{search}']
+    search_command = ["youtube-dl", *STREAM_SEARCH, *search]
+    search_results = subprocess.Popen(search_command,
+                                      stdout=subprocess.PIPE)
+    output, _ = search_results.communicate()
+    print(output)
 
 
 def main(argv):
