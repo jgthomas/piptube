@@ -46,6 +46,10 @@ STREAM_SEARCH = ['youtube-dl',
 def get_args(args):
     parser = argparse.ArgumentParser(description='Picture-in-picture video')
     parser.add_argument('source', type=str, help='file or url to play')
+    video_size = parser.add_mutually_exclusive_group()
+    video_size.add_argument('-s', '--small', action='store_true', help='small video')
+    video_size.add_argument('-m', '--medium', action='store_true', help='medium video')
+    video_size.add_argument('-l', '--large', action='store_true', help='large video')
     return parser.parse_args(args)
 
 
