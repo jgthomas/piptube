@@ -7,22 +7,33 @@ import sys
 import re
 import argparse
 
+LOW_FORMAT = "(mp4)[height<=480]/best[height<=480]"
+NORMAL_FORMAT = '(mp4)[height<=1080]/best[height<=1080]'
+FORMAT = NORMAL_FORMAT
+
+SMALL_VID = "384x216"
+MED_VID = "640x360"
+LARGE_VID ="1280x720"
+SIZE = MED_VID
+
+TOP_RIGHT = "98%:2%"
+BOTTOM_RIGHT = "98%:98%"
+TOP_LEFT = "2%:2%"
+BOTTOM_LEFT = "2%:98%"
+POSITION = BOTTOM_RIGHT
+
 
 MPV = ['mpv',
        '--ontop',
        '--no-border',
        '--on-all-workspaces',
-       '--autofit=640x320',
-       '--geometry=98%:98%'
+       f'--autofit={SIZE}',
+       f'--geometry={POSITION}'
        ]
 
 
-STREAM_URL = ['--ytdl-format',
-              '(mp4)[height<=1080]/best[height<=1080]'
-              ]
-
-
-STREAM_SEARCH = ['--format', '(mp4)[height<=1080]/best[height<=1080]']
+STREAM_URL = ['--ytdl-format', f'{FORMAT}']
+STREAM_SEARCH = ['--format', f'{FORMAT}']
 
 
 def get_args(args):
