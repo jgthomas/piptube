@@ -41,15 +41,13 @@ def stream_url(url):
     subprocess.run(command)
 
 
-def stream_search(search):
-    search = ['--get-url', f'ytsearch3:{search}']
+def stream_search(s):
+    search = ['--get-url', f'ytsearch3:{s}']
     search_command = ["youtube-dl", *STREAM_SEARCH, *search]
     search_results = subprocess.Popen(search_command, stdout=subprocess.PIPE)
     output, _ = search_results.communicate()
-    search_results.stdout.close()
-    for url in output.split(b'\n'):
-        stream_url(url)
-
+    to_play = output.split(b'\n')
+    subprocess.run([*MPV, *to_play])
 
 
 def main(argv):
