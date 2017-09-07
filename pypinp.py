@@ -7,21 +7,23 @@ import sys
 import re
 import argparse
 
-LOW_FORMAT = "(mp4)[height<=480]/best[height<=480]"
+
+LOW_FORMAT = '(mp4)[height<=480]/best[height<=480]'
 NORMAL_FORMAT = '(mp4)[height<=1080]/best[height<=1080]'
 FORMAT = NORMAL_FORMAT
 
-SMALL_VID = "384x216"
-MED_VID = "640x360"
-LARGE_VID ="1280x720"
+SMALL_VID = '384x216'
+MED_VID = '640x360'
+LARGE_VID ='1280x720'
 SIZE = MED_VID
 
-TOP_RIGHT = "98%:2%"
-BOTTOM_RIGHT = "98%:98%"
-TOP_LEFT = "2%:2%"
-BOTTOM_LEFT = "2%:98%"
+TOP_RIGHT = '98%:2%'
+BOTTOM_RIGHT = '98%:98%'
+TOP_LEFT = '2%:2%'
+BOTTOM_LEFT = '2%:98%'
 POSITION = BOTTOM_RIGHT
 
+VIDEO_NO = 5
 
 MPV = ['mpv',
        '--ontop',
@@ -33,7 +35,12 @@ MPV = ['mpv',
 
 
 STREAM_URL = ['--ytdl-format', f'{FORMAT}']
-STREAM_SEARCH = ['--format', f'{FORMAT}']
+
+STREAM_SEARCH = ['youtube-dl',
+                 '--format',
+                 f'{FORMAT}',
+                 '--get-url'
+                 ]
 
 
 def get_args(args):
@@ -53,8 +60,8 @@ def stream_url(url):
 
 
 def stream_search(s):
-    search = ['--get-url', f'ytsearch3:{s}']
-    search_command = ["youtube-dl", *STREAM_SEARCH, *search]
+    search = f'ytsearch{VIDEO_NO}:{s}'
+    search_command = [*STREAM_SEARCH, search]
     search_results = subprocess.Popen(search_command, stdout=subprocess.PIPE)
     output, _ = search_results.communicate()
     to_play = output.split(b'\n')
