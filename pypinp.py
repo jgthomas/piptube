@@ -23,6 +23,8 @@ TOP_LEFT = '2%:2%'
 BOTTOM_LEFT = '2%:98%'
 DEFAULT_POSITION = BOTTOM_RIGHT
 
+DEFAULT_NUMBER = 5
+
 MPV_BASE = ['mpv',
             '--ontop',
             '--no-border',
@@ -33,6 +35,7 @@ MPV_BASE = ['mpv',
 def get_args(args):
     parser = argparse.ArgumentParser(description='Picture-in-picture video')
     parser.add_argument('source', type=str, help='file or url to play')
+    parser.add_argument('-n', '--number', type=int, help='number of videos to play', metavar='')
     size = parser.add_mutually_exclusive_group()
     size.add_argument('-s', '--small', action='store_true', help='small video')
     size.add_argument('-m', '--medium', action='store_true', help='medium video')
@@ -53,12 +56,14 @@ class PlayVideo:
                  *,
                  size,
                  position,
-                 video_format):
+                 video_format,
+                 number):
         self.source = source
         self.source_type = source_type
         self.size = f'--autofit={size}'
         self.position = f'--geometry={position}'
         self.video_format = f'{video_format}'
+        self.number = number
         self.mpv = [*MPV_BASE, self.size, self.position]
         self.play_video()
 
@@ -73,7 +78,7 @@ class PlayVideo:
                         self.source])
 
     def play_search_result(self):
-        search = f'ytsearch5:{self.source}'
+        search = f'ytsearch{self.number}:{self.source}'
         search_command = ['youtube-dl',
                           '--format',
                           self.video_format,
@@ -94,6 +99,7 @@ class PlayVideo:
 
 def main(argv):
     args = get_args(argv)
+    print(args)
 
     source = args.source
 
@@ -105,7 +111,7 @@ def main(argv):
     else:
         source_type = 'search'
 
-    # set video size
+    # video size
     if args.small:
         size = SMALL_VIDEO
     elif args.medium:
@@ -115,7 +121,7 @@ def main(argv):
     else:
         size = DEFAULT_VIDEO
 
-    # set video position
+    # video position
     if args.top_left:
         position = TOP_LEFT
     elif args.top_right:
@@ -127,14 +133,21 @@ def main(argv):
     else:
         position = DEFAULT_POSITION
 
-    # set video quality and format
+    # number of videos to play
+    if args.number:
+        number = args.number
+    else:
+        number = DEFAULT_NUMBER
+
+    # video quality and format
     video_format = DEFAULT_FORMAT
 
     PlayVideo(source,
               source_type,
               size=size,
               position=position,
-              video_format=video_format)
+              video_format=video_format,
+              number=number)
 
 
 if __name__ == '__main__':
