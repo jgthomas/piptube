@@ -9,20 +9,18 @@ import argparse
 import configparser
 
 
-LOW_FORMAT = '(mp4)[height<=480]/best[height<=480]'
-NORMAL_FORMAT = '(mp4)[height<=1080]/best[height<=1080]'
-DEFAULT_FORMAT = NORMAL_FORMAT
+VIDEO_SIZE = {'small': '384x216',
+              'medium': '640x360',
+              'large': '1280x720',
+              'extra large': '1920x1080'}
 
-SMALL_VIDEO = '384x216'
-MEDIUM_VIDEO = '640x360'
-LARGE_VIDEO ='1280x720'
-DEFAULT_VIDEO = MEDIUM_VIDEO
+VIDEO_POSITION = {'top left': '2%:2%',
+                  'top right': '98%:2%',
+                  'bottom right': '98%:98%',
+                  'bottom left': '2%:98%'}
 
-TOP_RIGHT = '98%:2%'
-BOTTOM_RIGHT = '98%:98%'
-TOP_LEFT = '2%:2%'
-BOTTOM_LEFT = '2%:98%'
-DEFAULT_POSITION = BOTTOM_RIGHT
+VIDEO_QUALITY = {'low': '(mp4)[height<=480]/best[height<=480]',
+                 'high': '(mp4)[height<=1080]/best[height<=1080]'}
 
 
 def get_args(args):
@@ -34,6 +32,7 @@ def get_args(args):
     size.add_argument('-s', '--small', action='store_true', help='small video')
     size.add_argument('-m', '--medium', action='store_true', help='medium video')
     size.add_argument('-l', '--large', action='store_true', help='large video')
+    size.add_argument('-xl', '--extra-large', action='store_true', help='extra large video')
     position = parser.add_mutually_exclusive_group()
     position.add_argument('-tl', '--top-left', action='store_true', help='initial placement top left')
     position.add_argument('-tr', '--top-right', action='store_true', help='initial placement top right')
@@ -99,13 +98,15 @@ class PlayVideo:
 def main(argv):
     config = configparser.ConfigParser()
     config.read('piptube.ini')
-    NUMBER_TO_PLAY = config['piptube']['number to play']
+    DEFAULT_SIZE = config['piptube']['video size']
+    DEFAULT_POSITION = config['piptube']['position']
+    DEFAULT_NUMBER = config['piptube']['number to play']
+    DEFAULT_QUALITY = config['piptube']['video quality']
 
     args = get_args(argv)
 
     source = args.source
 
-    # detect type of source
     if os.path.isfile(source):
         source_type = 'file'
     elif re.match(r'^http', source):
@@ -113,39 +114,37 @@ def main(argv):
     else:
         source_type = 'search'
 
-    # video size
     if args.small:
-        size = SMALL_VIDEO
+        size = VIDEO_SIZE['small']
     elif args.medium:
-        size = MEDIUM_VIDEO
+        size = VIDEO_SIZE['medium']
     elif args.large:
-        size = LARGE_VIDEO
+        size = VIDEO_SIZE['large']
+    elif args.extra_large:
+        size = VIDEO_SIZE['extra large']
     else:
-        size = DEFAULT_VIDEO
+        size = VIDEO_SIZE[DEFAULT_SIZE]
 
-    # video position
     if args.top_left:
-        position = TOP_LEFT
+        position = VIDEO_POSITION['top left']
     elif args.top_right:
-        position = TOP_RIGHT
+        position = VIDEO_POSITION['top right']
     elif args.bottom_left:
-        position = BOTTOM_LEFT
+        position = VIDEO_POSITION['bottom left']
     elif args.bottom_right:
-        position = BOTTOM_RIGHT
+        position = VIDEO_POSITION['bottom right']
     else:
-        position = DEFAULT_POSITION
+        position = VIDEO_POSITION[DEFAULT_POSITION]
 
-    # number of videos to play
     if args.number_to_play:
         number_to_play = args.number_to_play
     else:
-        number_to_play = NUMBER_TO_PLAY
+        number_to_play = DEFAULT_NUMBER
 
-    # video quality and format
     if args.low_quality:
-        video_format = LOW_FORMAT
+        video_format = VIDEO_QUALITY['low']
     else:
-        video_format = DEFAULT_FORMAT
+        video_format = VIDEO_QUALITY[DEFAULT_QUALITY]
 
     PlayVideo(source,
               source_type,
