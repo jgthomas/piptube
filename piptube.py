@@ -7,12 +7,10 @@ import sys
 import re
 import argparse
 import configparser
-from config import write_config_if_not_exists
+from config import CONFIG, write_config_if_not_exists
 
 
 APP_NAME = 'piptube'
-
-CONFIG = 'piptube.ini'
 
 BASE = {'size': 'medium',
         'quality': 'high',

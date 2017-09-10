@@ -4,6 +4,9 @@ import os
 import configparser
 
 
+CONFIG = 'piptube.ini'
+
+
 def write_config_if_not_exists(inifile):
     if not os.path.isfile(inifile):
         config = configparser.ConfigParser()

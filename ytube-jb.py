@@ -7,11 +7,10 @@ import sys
 import re
 import argparse
 import configparser
+from config import CONFIG, write_config_if_not_exists
 
 
 APP_NAME = 'ytube-jb'
-
-CONFIG = 'piptube.ini'
 
 BASE = {'number': 5}
 
@@ -54,6 +53,8 @@ class PlayAudio:
 
 
 def main(argv):
+    write_config_if_not_exists(CONFIG)
+
     config = configparser.ConfigParser()
     config.read(CONFIG)
     config_specified = True
