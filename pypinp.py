@@ -30,19 +30,18 @@ MPV_BASE = ['mpv',
             ]
 
 
-
 def get_args(args):
     parser = argparse.ArgumentParser(description='Picture-in-picture video')
     parser.add_argument('source', type=str, help='file or url to play')
-    video_size = parser.add_mutually_exclusive_group()
-    video_size.add_argument('-s', '--small', action='store_true', help='small video')
-    video_size.add_argument('-m', '--medium', action='store_true', help='medium video')
-    video_size.add_argument('-l', '--large', action='store_true', help='large video')
-    video_position = parser.add_mutually_exclusive_group()
-    video_position.add_argument('-tl', '--top-left', action='store_true', help='initial placement top left')
-    video_position.add_argument('-tr', '--top-right', action='store_true', help='initial placement top right')
-    video_position.add_argument('-bl', '--bottom-left', action='store_true', help='initial placement bottom left')
-    video_position.add_argument('-br', '--bottom-right', action='store_true', help='initial placement bottom right')
+    size = parser.add_mutually_exclusive_group()
+    size.add_argument('-s', '--small', action='store_true', help='small video')
+    size.add_argument('-m', '--medium', action='store_true', help='medium video')
+    size.add_argument('-l', '--large', action='store_true', help='large video')
+    position = parser.add_mutually_exclusive_group()
+    position.add_argument('-tl', '--top-left', action='store_true', help='initial placement top left')
+    position.add_argument('-tr', '--top-right', action='store_true', help='initial placement top right')
+    position.add_argument('-bl', '--bottom-left', action='store_true', help='initial placement bottom left')
+    position.add_argument('-br', '--bottom-right', action='store_true', help='initial placement bottom right')
     return parser.parse_args(args)
 
 
@@ -95,6 +94,7 @@ class PlayVideo:
 
 def main(argv):
     args = get_args(argv)
+
     source = args.source
 
     # detect type of source
@@ -130,11 +130,11 @@ def main(argv):
     # set video quality and format
     video_format = DEFAULT_FORMAT
 
-    play = PlayVideo(source,
-                     source_type,
-                     size=size,
-                     position=position,
-                     video_format=video_format)
+    PlayVideo(source,
+              source_type,
+              size=size,
+              position=position,
+              video_format=video_format)
 
 
 if __name__ == '__main__':
