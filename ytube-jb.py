@@ -6,9 +6,7 @@ import os
 import sys
 import re
 import argparse
-
-
-DEFAULT_NUMBER = 5
+import configparser
 
 
 def get_args(args):
@@ -49,6 +47,10 @@ class PlayAudio:
 
 
 def main(argv):
+    config = configparser.ConfigParser()
+    config.read('ytube-jb.ini')
+    NUMBER_TO_PLAY = config['DEFAULT']['number to play']
+
     args = get_args(argv)
 
     source = args.source
@@ -61,7 +63,7 @@ def main(argv):
     if args.number_to_play:
         number_to_play = args.number_to_play
     else:
-        number_to_play = DEFAULT_NUMBER
+        number_to_play = NUMBER_TO_PLAY
 
     PlayAudio(source, source_type, number_to_play)
 
