@@ -7,6 +7,7 @@ import sys
 import re
 import argparse
 import configparser
+from config import write_config_if_not_exists
 
 
 APP_NAME = 'piptube'
@@ -105,6 +106,8 @@ class PlayVideo:
 
 
 def main(argv):
+    write_config_if_not_exists(CONFIG)
+
     config = configparser.ConfigParser()
     config.read(CONFIG)
     config_specified = True
