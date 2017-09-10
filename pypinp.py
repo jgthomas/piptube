@@ -10,37 +10,25 @@ import argparse
 
 LOW_FORMAT = '(mp4)[height<=480]/best[height<=480]'
 NORMAL_FORMAT = '(mp4)[height<=1080]/best[height<=1080]'
-FORMAT = NORMAL_FORMAT
+DEFAULT_FORMAT = NORMAL_FORMAT
 
-SMALL_VID = '384x216'
-MED_VID = '640x360'
-LARGE_VID ='1280x720'
-SIZE = MED_VID
+SMALL_VIDEO = '384x216'
+MEDIUM_VIDEO = '640x360'
+LARGE_VIDEO ='1280x720'
+DEFAULT_VIDEO = MEDIUM_VIDEO
 
 TOP_RIGHT = '98%:2%'
 BOTTOM_RIGHT = '98%:98%'
 TOP_LEFT = '2%:2%'
 BOTTOM_LEFT = '2%:98%'
-POSITION = BOTTOM_RIGHT
+DEFAULT_POSITION = BOTTOM_RIGHT
 
-VIDEO_NO = 5
+MPV_BASE = ['mpv',
+            '--ontop',
+            '--no-border',
+            '--on-all-workspaces'
+            ]
 
-MPV = ['mpv',
-       '--ontop',
-       '--no-border',
-       '--on-all-workspaces',
-       f'--autofit={SIZE}',
-       f'--geometry={POSITION}'
-       ]
-
-
-STREAM_URL = ['--ytdl-format', f'{FORMAT}']
-
-STREAM_SEARCH = ['youtube-dl',
-                 '--format',
-                 f'{FORMAT}',
-                 '--get-url'
-                 ]
 
 
 def get_args(args):
@@ -50,38 +38,103 @@ def get_args(args):
     video_size.add_argument('-s', '--small', action='store_true', help='small video')
     video_size.add_argument('-m', '--medium', action='store_true', help='medium video')
     video_size.add_argument('-l', '--large', action='store_true', help='large video')
+    video_position = parser.add_mutually_exclusive_group()
+    video_position.add_argument('-tl', '--top-left', action='store_true', help='initial placement top left')
+    video_position.add_argument('-tr', '--top-right', action='store_true', help='initial placement top right')
+    video_position.add_argument('-bl', '--bottom-left', action='store_true', help='initial placement bottom left')
+    video_position.add_argument('-br', '--bottom-right', action='store_true', help='initial placement bottom right')
     return parser.parse_args(args)
 
 
-def play_local(filename):
-    command = [*MPV, filename]
-    subprocess.run(command)
+class PlayVideo:
 
+    def __init__(self,
+                 source,
+                 source_type,
+                 *,
+                 size,
+                 position,
+                 video_format):
+        self.source = source
+        self.source_type = source_type
+        self.size = f'--autofit={size}'
+        self.position = f'--geometry={position}'
+        self.video_format = f'{video_format}'
+        self.mpv = [*MPV_BASE, self.size, self.position]
+        self.play_video()
 
-def stream_url(url):
-    command = [*MPV, *STREAM_URL, url]
-    subprocess.run(command)
+    def play_local(self):
+        subprocess.run([*self.mpv,
+                        self.source])
 
+    def play_url(self):
+        subprocess.run([*self.mpv,
+                        '--ytdl-format',
+                        self.video_format,
+                        self.source])
 
-def stream_search(s):
-    search = f'ytsearch{VIDEO_NO}:{s}'
-    search_command = [*STREAM_SEARCH, search]
-    search_results = subprocess.Popen(search_command, stdout=subprocess.PIPE)
-    output, _ = search_results.communicate()
-    to_play = output.split(b'\n')
-    subprocess.run([*MPV, *to_play])
+    def play_search_result(self):
+        search = f'ytsearch5:{self.source}'
+        search_command = ['youtube-dl',
+                          '--format',
+                          self.video_format,
+                          '--get-url',
+                          search]
+        search_results = subprocess.Popen(search_command,
+                                          stdout=subprocess.PIPE)
+        output, _ = search_results.communicate()
+        to_play = output.split(b'\n')
+        subprocess.run([*self.mpv, *to_play])
+
+    def play_video(self):
+        play = {'file': self.play_local,
+                'url': self.play_url,
+                'search': self.play_search_result}
+        play[self.source_type]()
 
 
 def main(argv):
     args = get_args(argv)
-    to_play = args.source
+    source = args.source
 
-    if os.path.isfile(to_play):
-        play_local(to_play)
-    elif re.match(r'^http', to_play):
-        stream_url(to_play)
+    # detect type of source
+    if os.path.isfile(source):
+        source_type = 'file'
+    elif re.match(r'^http', source):
+        source_type = 'url'
     else:
-        stream_search(to_play)
+        source_type = 'search'
+
+    # set video size
+    if args.small:
+        size = SMALL_VIDEO
+    elif args.medium:
+        size = MEDIUM_VIDEO
+    elif args.large:
+        size = LARGE_VIDEO
+    else:
+        size = DEFAULT_VIDEO
+
+    # set video position
+    if args.top_left:
+        position = TOP_LEFT
+    elif args.top_right:
+        position = TOP_RIGHT
+    elif args.bottom_left:
+        position = BOTTOM_LEFT
+    elif args.bottom_right:
+        position = BOTTOM_RIGHT
+    else:
+        position = DEFAULT_POSITION
+
+    # set video quality and format
+    video_format = DEFAULT_FORMAT
+
+    play = PlayVideo(source,
+                     source_type,
+                     size=size,
+                     position=position,
+                     video_format=video_format)
 
 
 if __name__ == '__main__':
