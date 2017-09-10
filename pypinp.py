@@ -25,11 +25,6 @@ DEFAULT_POSITION = BOTTOM_RIGHT
 
 DEFAULT_NUMBER = 5
 
-MPV_BASE = ['mpv',
-            '--ontop',
-            '--no-border',
-            '--on-all-workspaces'
-            ]
 
 
 def get_args(args):
@@ -51,6 +46,12 @@ def get_args(args):
 
 class PlayVideo:
 
+    MPV_BASE = ['mpv',
+                '--ontop',
+                '--no-border',
+                '--on-all-workspaces'
+                ]
+
     def __init__(self,
                  source,
                  source_type,
@@ -64,7 +65,7 @@ class PlayVideo:
         self.position = f'--geometry={position}'
         self.video_format = f'{video_format}'
         self.number_to_play = number_to_play
-        self.mpv = [*MPV_BASE, self.size, self.position]
+        self.mpv = [*self.MPV_BASE, self.size, self.position]
         self.play_video()
 
     def play_local(self):
