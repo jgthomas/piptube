@@ -30,7 +30,17 @@ class PlayAudio:
         subprocess.run(['mpv', '--no-video', self.source])
 
     def play_search_result(self):
-        pass
+        search = f'ytsearch{self.number_to_play}:{self.source}'
+        search_command = ['youtube-dl',
+                          '--format',
+                          'bestaudio',
+                          '--get-url',
+                          search]
+        search_results = subprocess.Popen(search_command,
+                                          stdout=subprocess.PIPE)
+        output, _ = search_results.communicate()
+        to_play = output.split(b'\n')
+        subprocess.run(['mpv', *to_play])
 
     def play_audio(self):
         play = {'url': self.play_url,
@@ -46,7 +56,7 @@ def main(argv):
     if re.match(r'^http', source):
         source_type = 'url'
     else:
-        source = 'search'
+        source_type = 'search'
 
     if args.number_to_play:
         number_to_play = args.number_to_play
