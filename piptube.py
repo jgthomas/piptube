@@ -6,6 +6,7 @@ import os
 import sys
 import re
 import argparse
+import configparser
 
 
 LOW_FORMAT = '(mp4)[height<=480]/best[height<=480]'
@@ -22,8 +23,6 @@ BOTTOM_RIGHT = '98%:98%'
 TOP_LEFT = '2%:2%'
 BOTTOM_LEFT = '2%:98%'
 DEFAULT_POSITION = BOTTOM_RIGHT
-
-DEFAULT_NUMBER = 5
 
 
 def get_args(args):
@@ -98,6 +97,10 @@ class PlayVideo:
 
 
 def main(argv):
+    config = configparser.ConfigParser()
+    config.read('piptube.ini')
+    NUMBER_TO_PLAY = config['piptube']['number to play']
+
     args = get_args(argv)
 
     source = args.source
@@ -136,7 +139,7 @@ def main(argv):
     if args.number_to_play:
         number_to_play = args.number_to_play
     else:
-        number_to_play = DEFAULT_NUMBER
+        number_to_play = NUMBER_TO_PLAY
 
     # video quality and format
     if args.low_quality:
