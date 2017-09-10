@@ -9,7 +9,7 @@ import argparse
 import configparser
 
 
-APP = 'piptube'
+APP_NAME = 'piptube'
 
 CONFIG = 'piptube.ini'
 
@@ -132,7 +132,7 @@ def main(argv):
         size = VIDEO_SIZE['extra large']
     else:
         try:
-            default_size = config[APP]['video size']
+            default_size = config[APP_NAME]['video size']
             size = VIDEO_SIZE[default_size]
         except KeyError:
             print('Size not specifed, reverting to built-in default...')
@@ -150,7 +150,7 @@ def main(argv):
         position = VIDEO_POSITION['bottom right']
     else:
         try:
-            default_position = config[APP]['position']
+            default_position = config[APP_NAME]['position']
             position = VIDEO_POSITION[default_position]
         except KeyError:
             print('Position not specifed, reverting to built-in default...')
@@ -162,7 +162,7 @@ def main(argv):
         number_to_play = args.number_to_play
     else:
         try:
-            number_to_play = config[APP]['number to play']
+            number_to_play = config[APP_NAME]['number to play']
         except KeyError:
             print('Number to play not specifed, reverting to built-in default...')
             config_specified = False
@@ -173,7 +173,7 @@ def main(argv):
         video_format = VIDEO_QUALITY['low']
     else:
         try:
-            default_quality = config[APP]['video quality']
+            default_quality = config[APP_NAME]['video quality']
             video_format = VIDEO_QUALITY[default_quality]
         except KeyError:
             print('Quality not specifed, reverting to built-in default...')

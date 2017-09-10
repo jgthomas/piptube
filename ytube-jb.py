@@ -9,7 +9,7 @@ import argparse
 import configparser
 
 
-APP = 'ytube-jb'
+APP_NAME = 'ytube-jb'
 
 CONFIG = 'piptube.ini'
 
@@ -71,7 +71,7 @@ def main(argv):
         number_to_play = args.number_to_play
     else:
         try:
-            number_to_play = config[APP]['number to play']
+            number_to_play = config[APP_NAME]['number to play']
         except KeyError:
             print('Number to play not specified, reverting to built-in default...')
             config_specified = False
