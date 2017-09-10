@@ -26,7 +26,6 @@ DEFAULT_POSITION = BOTTOM_RIGHT
 DEFAULT_NUMBER = 5
 
 
-
 def get_args(args):
     parser = argparse.ArgumentParser(description='Picture-in-picture video')
     parser.add_argument('source', type=str, help='file or url to play')
