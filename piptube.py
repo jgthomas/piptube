@@ -108,38 +108,12 @@ def main(argv):
     config = configparser.ConfigParser()
     config.read(CONFIG)
     config_specified = True
-    try:
-        DEFAULT_SIZE = config[APP]['video size']
-    except KeyError:
-        print('Size not specifed, reverting to built-in default...')
-        config_specified = False
-        DEFAULT_SIZE = BASE['size']
-    try:
-        DEFAULT_POSITION = config[APP]['position']
-    except KeyError:
-        print('Position not specifed, reverting to built-in default...')
-        config_specified = False
-        DEFAULT_POSITION = BASE['position']
-    try:
-        DEFAULT_NUMBER = config[APP]['number to play']
-    except KeyError:
-        print('Number to play not specifed, reverting to built-in default...')
-        config_specified = False
-        DEFAULT_NUMBER = BASE['number']
-    try:
-        DEFAULT_QUALITY = config[APP]['video quality']
-    except KeyError:
-        print('Quality not specifed, reverting to built-in default...')
-        config_specified = False
-        DEFAULT_QUALITY = BASE['quality']
-
-    if not config_specified:
-        print(f'Pass settings via command line, or place settings in "{CONFIG}"')
 
     args = get_args(argv)
 
     source = args.source
 
+    # source type
     if os.path.isfile(source):
         source_type = 'file'
     elif re.match(r'^http', source):
@@ -147,6 +121,7 @@ def main(argv):
     else:
         source_type = 'search'
 
+    # video size
     if args.small:
         size = VIDEO_SIZE['small']
     elif args.medium:
@@ -156,8 +131,15 @@ def main(argv):
     elif args.extra_large:
         size = VIDEO_SIZE['extra large']
     else:
-        size = VIDEO_SIZE[DEFAULT_SIZE]
+        try:
+            default_size = config[APP]['video size']
+            size = VIDEO_SIZE[default_size]
+        except KeyError:
+            print('Size not specifed, reverting to built-in default...')
+            config_specified = False
+            size = VIDEO_SIZE[BASE['size']]
 
+    # video position
     if args.top_left:
         position = VIDEO_POSITION['top left']
     elif args.top_right:
@@ -167,17 +149,39 @@ def main(argv):
     elif args.bottom_right:
         position = VIDEO_POSITION['bottom right']
     else:
-        position = VIDEO_POSITION[DEFAULT_POSITION]
+        try:
+            default_position = config[APP]['position']
+            position = VIDEO_POSITION[default_position]
+        except KeyError:
+            print('Position not specifed, reverting to built-in default...')
+            config_specified = False
+            position = VIDEO_POSITION[BASE['position']]
 
+    # number of videos to play
     if args.number_to_play:
         number_to_play = args.number_to_play
     else:
-        number_to_play = DEFAULT_NUMBER
+        try:
+            number_to_play = config[APP]['number to play']
+        except KeyError:
+            print('Number to play not specifed, reverting to built-in default...')
+            config_specified = False
+            number_to_play = BASE['number']
 
+    # video quality
     if args.low_quality:
         video_format = VIDEO_QUALITY['low']
     else:
-        video_format = VIDEO_QUALITY[DEFAULT_QUALITY]
+        try:
+            default_quality = config[APP]['video quality']
+            video_format = VIDEO_QUALITY[default_quality]
+        except KeyError:
+            print('Quality not specifed, reverting to built-in default...')
+            config_specified = False
+            video_format = VIDEO_QUALITY[BASE['quality']]
+
+    if not config_specified:
+        print(f'Pass settings via command line, or place settings in "{CONFIG}"')
 
     PlayVideo(source,
               source_type,
