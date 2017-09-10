@@ -8,6 +8,7 @@ import re
 import argparse
 import configparser
 
+
 APP = 'ytube-jb'
 
 CONFIG = 'piptube.ini'
