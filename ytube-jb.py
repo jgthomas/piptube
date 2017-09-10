@@ -54,10 +54,9 @@ class PlayAudio:
 
 def main(argv):
     write_config_if_not_exists(CONFIG)
-
     config = configparser.ConfigParser()
     config.read(CONFIG)
-    config_specified = True
+    app_config = config[APP_NAME]
 
     args = get_args(argv)
 
@@ -71,15 +70,7 @@ def main(argv):
     if args.number_to_play:
         number_to_play = args.number_to_play
     else:
-        try:
-            number_to_play = config[APP_NAME]['number to play']
-        except KeyError:
-            print('Number to play not specified, reverting to built-in default...')
-            config_specified = False
-            number_to_play = BASE['number']
-
-    if not config_specified:
-        print(f'Pass settings via command line, or edit settings in "{CONFIG}"')
+        number_to_play = app_config.get('number to play', BASE['number'])
 
     PlayAudio(source, source_type, number_to_play)
 

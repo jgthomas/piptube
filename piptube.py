@@ -105,16 +105,14 @@ class PlayVideo:
 
 def main(argv):
     write_config_if_not_exists(CONFIG)
-
     config = configparser.ConfigParser()
     config.read(CONFIG)
-    config_specified = True
+    app_config = config[APP_NAME]
 
     args = get_args(argv)
 
     source = args.source
 
-    # source type
     if os.path.isfile(source):
         source_type = 'file'
     elif re.match(r'^http', source):
@@ -122,7 +120,6 @@ def main(argv):
     else:
         source_type = 'search'
 
-    # video size
     if args.small:
         size = VIDEO_SIZE['small']
     elif args.medium:
@@ -132,15 +129,9 @@ def main(argv):
     elif args.extra_large:
         size = VIDEO_SIZE['extra large']
     else:
-        try:
-            default_size = config[APP_NAME]['video size']
-            size = VIDEO_SIZE[default_size]
-        except KeyError:
-            print('Size not specifed, reverting to built-in default...')
-            config_specified = False
-            size = VIDEO_SIZE[BASE['size']]
+        default_size = app_config.get('video size', BASE['size'])
+        size = VIDEO_SIZE[default_size]
 
-    # video position
     if args.top_left:
         position = VIDEO_POSITION['top left']
     elif args.top_right:
@@ -150,39 +141,19 @@ def main(argv):
     elif args.bottom_right:
         position = VIDEO_POSITION['bottom right']
     else:
-        try:
-            default_position = config[APP_NAME]['position']
-            position = VIDEO_POSITION[default_position]
-        except KeyError:
-            print('Position not specifed, reverting to built-in default...')
-            config_specified = False
-            position = VIDEO_POSITION[BASE['position']]
+        default_position = app_config.get('position', BASE['position'])
+        position = VIDEO_POSITION[default_position]
 
-    # number of videos to play
     if args.number_to_play:
         number_to_play = args.number_to_play
     else:
-        try:
-            number_to_play = config[APP_NAME]['number to play']
-        except KeyError:
-            print('Number to play not specifed, reverting to built-in default...')
-            config_specified = False
-            number_to_play = BASE['number']
+        number_to_play = app_config.get('number to play', BASE['number'])
 
-    # video quality
     if args.low_quality:
         video_format = VIDEO_QUALITY['low']
     else:
-        try:
-            default_quality = config[APP_NAME]['video quality']
-            video_format = VIDEO_QUALITY[default_quality]
-        except KeyError:
-            print('Quality not specifed, reverting to built-in default...')
-            config_specified = False
-            video_format = VIDEO_QUALITY[BASE['quality']]
-
-    if not config_specified:
-        print(f'Pass settings via command line, or place settings in "{CONFIG}"')
+        default_quality = app_config.get('video quality', BASE['quality'])
+        video_format = VIDEO_QUALITY[default_quality]
 
     PlayVideo(source,
               source_type,
