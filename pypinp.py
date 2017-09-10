@@ -36,6 +36,7 @@ def get_args(args):
     parser = argparse.ArgumentParser(description='Picture-in-picture video')
     parser.add_argument('source', type=str, help='file or url to play')
     parser.add_argument('-n', '--number-to-play', type=int, help='number of videos to play', metavar='')
+    parser.add_argument('-lq', '--low-quality', action='store_true', help='use a lower quality steam')
     size = parser.add_mutually_exclusive_group()
     size.add_argument('-s', '--small', action='store_true', help='small video')
     size.add_argument('-m', '--medium', action='store_true', help='medium video')
@@ -139,7 +140,10 @@ def main(argv):
         number_to_play = DEFAULT_NUMBER
 
     # video quality and format
-    video_format = DEFAULT_FORMAT
+    if args.low_quality:
+        video_format = LOW_FORMAT
+    else:
+        video_format = DEFAULT_FORMAT
 
     PlayVideo(source,
               source_type,
