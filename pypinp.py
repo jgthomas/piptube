@@ -99,7 +99,6 @@ class PlayVideo:
 
 def main(argv):
     args = get_args(argv)
-    print(args)
 
     source = args.source
 
