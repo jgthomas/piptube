@@ -9,6 +9,15 @@ import argparse
 import configparser
 
 
+APP = 'piptube'
+
+CONFIG = 'piptube.ini'
+
+BASE = {'size': 'medium',
+        'quality': 'high',
+        'position': 'bottom right',
+        'number': 5}
+
 VIDEO_SIZE = {'small': '384x216',
               'medium': '640x360',
               'large': '1280x720',
@@ -97,11 +106,35 @@ class PlayVideo:
 
 def main(argv):
     config = configparser.ConfigParser()
-    config.read('piptube.ini')
-    DEFAULT_SIZE = config['piptube']['video size']
-    DEFAULT_POSITION = config['piptube']['position']
-    DEFAULT_NUMBER = config['piptube']['number to play']
-    DEFAULT_QUALITY = config['piptube']['video quality']
+    config.read(CONFIG)
+    config_specified = True
+    try:
+        DEFAULT_SIZE = config[APP]['video size']
+    except KeyError:
+        print('Size not specifed, reverting to built-in default...')
+        config_specified = False
+        DEFAULT_SIZE = BASE['size']
+    try:
+        DEFAULT_POSITION = config[APP]['position']
+    except KeyError:
+        print('Position not specifed, reverting to built-in default...')
+        config_specified = False
+        DEFAULT_POSITION = BASE['position']
+    try:
+        DEFAULT_NUMBER = config[APP]['number to play']
+    except KeyError:
+        print('Number to play not specifed, reverting to built-in default...')
+        config_specified = False
+        DEFAULT_NUMBER = BASE['number']
+    try:
+        DEFAULT_QUALITY = config[APP]['video quality']
+    except KeyError:
+        print('Quality not specifed, reverting to built-in default...')
+        config_specified = False
+        DEFAULT_QUALITY = BASE['quality']
+
+    if not config_specified:
+        print(f'Pass settings via command line, or place settings in "{CONFIG}"')
 
     args = get_args(argv)
 
