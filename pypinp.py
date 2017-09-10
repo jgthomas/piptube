@@ -35,7 +35,7 @@ MPV_BASE = ['mpv',
 def get_args(args):
     parser = argparse.ArgumentParser(description='Picture-in-picture video')
     parser.add_argument('source', type=str, help='file or url to play')
-    parser.add_argument('-n', '--number', type=int, help='number of videos to play', metavar='')
+    parser.add_argument('-n', '--number-to-play', type=int, help='number of videos to play', metavar='')
     size = parser.add_mutually_exclusive_group()
     size.add_argument('-s', '--small', action='store_true', help='small video')
     size.add_argument('-m', '--medium', action='store_true', help='medium video')
@@ -53,17 +53,16 @@ class PlayVideo:
     def __init__(self,
                  source,
                  source_type,
-                 *,
                  size,
                  position,
                  video_format,
-                 number):
+                 number_to_play):
         self.source = source
         self.source_type = source_type
         self.size = f'--autofit={size}'
         self.position = f'--geometry={position}'
         self.video_format = f'{video_format}'
-        self.number = number
+        self.number_to_play = number_to_play
         self.mpv = [*MPV_BASE, self.size, self.position]
         self.play_video()
 
@@ -78,7 +77,7 @@ class PlayVideo:
                         self.source])
 
     def play_search_result(self):
-        search = f'ytsearch{self.number}:{self.source}'
+        search = f'ytsearch{self.number_to_play}:{self.source}'
         search_command = ['youtube-dl',
                           '--format',
                           self.video_format,
@@ -134,20 +133,20 @@ def main(argv):
         position = DEFAULT_POSITION
 
     # number of videos to play
-    if args.number:
-        number = args.number
+    if args.number_to_play:
+        number_to_play = args.number_to_play
     else:
-        number = DEFAULT_NUMBER
+        number_to_play = DEFAULT_NUMBER
 
     # video quality and format
     video_format = DEFAULT_FORMAT
 
     PlayVideo(source,
               source_type,
-              size=size,
-              position=position,
-              video_format=video_format,
-              number=number)
+              size,
+              position,
+              video_format,
+              number_to_play)
 
 
 if __name__ == '__main__':
