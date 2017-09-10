@@ -48,8 +48,8 @@ class PlayAudio:
 
 def main(argv):
     config = configparser.ConfigParser()
-    config.read('ytube-jb.ini')
-    NUMBER_TO_PLAY = config['DEFAULT']['number to play']
+    config.read('piptube.ini')
+    NUMBER_TO_PLAY = config['ytube-jb']['number to play']
 
     args = get_args(argv)
 
