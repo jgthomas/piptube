@@ -12,10 +12,10 @@ from config import CONFIG, write_config_if_not_exists
 
 APP_NAME = 'piptube'
 
-BASE = {'size': 'medium',
-        'quality': 'high',
+BASE = {'video size': 'medium',
+        'video quality': 'high',
         'position': 'bottom right',
-        'number': 5}
+        'number to play': 5}
 
 VIDEO_SIZE = {'small': '384x216',
               'medium': '640x360',
@@ -129,7 +129,7 @@ def main(argv):
     elif args.extra_large:
         size = VIDEO_SIZE['extra large']
     else:
-        default_size = app_config.get('video size', BASE['size'])
+        default_size = app_config.get('video size', BASE['video size'])
         size = VIDEO_SIZE[default_size]
 
     if args.top_left:
@@ -147,12 +147,12 @@ def main(argv):
     if args.number_to_play:
         number_to_play = args.number_to_play
     else:
-        number_to_play = app_config.get('number to play', BASE['number'])
+        number_to_play = app_config.get('number to play', BASE['number to play'])
 
     if args.low_quality:
         video_format = VIDEO_QUALITY['low']
     else:
-        default_quality = app_config.get('video quality', BASE['quality'])
+        default_quality = app_config.get('video quality', BASE['video quality'])
         video_format = VIDEO_QUALITY[default_quality]
 
     PlayVideo(source,
