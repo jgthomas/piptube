@@ -12,7 +12,7 @@ from config import CONFIG, VIDEO, write_config_if_not_exists
 
 APP_NAME = VIDEO
 
-BASE = {'video size': 'medium',
+DEFAULT = {'video size': 'medium',
         'video quality': 'high',
         'position': 'bottom right',
         'number to play': 5}
@@ -129,7 +129,7 @@ def main(argv):
     elif args.extra_large:
         size = VIDEO_SIZE['extra large']
     else:
-        default_size = app_config.get('video size', BASE['video size'])
+        default_size = app_config.get('video size', DEFAULT['video size'])
         size = VIDEO_SIZE[default_size]
 
     if args.top_left:
@@ -141,18 +141,18 @@ def main(argv):
     elif args.bottom_right:
         position = VIDEO_POSITION['bottom right']
     else:
-        default_position = app_config.get('position', BASE['position'])
+        default_position = app_config.get('position', DEFAULT['position'])
         position = VIDEO_POSITION[default_position]
 
     if args.number_to_play:
         number_to_play = args.number_to_play
     else:
-        number_to_play = app_config.get('number to play', BASE['number to play'])
+        number_to_play = app_config.get('number to play', DEFAULT['number to play'])
 
     if args.low_quality:
         video_format = VIDEO_QUALITY['low']
     else:
-        default_quality = app_config.get('video quality', BASE['video quality'])
+        default_quality = app_config.get('video quality', DEFAULT['video quality'])
         video_format = VIDEO_QUALITY[default_quality]
 
     PlayVideo(source,
