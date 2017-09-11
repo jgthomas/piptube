@@ -7,10 +7,10 @@ import sys
 import re
 import argparse
 import configparser
-from config import CONFIG, write_config_if_not_exists
+from config import CONFIG, AUDIO, write_config_if_not_exists
 
 
-APP_NAME = 'ytube-jb'
+APP_NAME = AUDIO
 
 BASE = {'number to play': 5}
 
