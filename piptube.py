@@ -44,7 +44,7 @@ def get_args(args):
     parser.add_argument('source', type=str, help='file or url to play')
     parser.add_argument('-n', '--number-to-play', type=int, help='number of videos to play', metavar='')
     parser.add_argument('-lq', '--low-quality', action='store_true', help='use a lower quality steam')
-    parser.add_argument('-c', '--channel', type=str, help='youtube channel to stream')
+    parser.add_argument('-c', '--channel', action='store_true', help='stream channel')
     size = parser.add_mutually_exclusive_group()
     size.add_argument('-s', '--small', action='store_true', help='small video')
     size.add_argument('-m', '--medium', action='store_true', help='medium video')
@@ -82,8 +82,7 @@ class PlayVideo:
         self.mpv = [*self.MPV_BASE, self.size, self.position]
         self.search_base = ['youtube-dl',
                             '--format',
-                            self.video_format,
-                            '--get-url']
+                            self.video_format]
         self.play_video()
 
     def play_local(self):
@@ -96,26 +95,33 @@ class PlayVideo:
                         self.video_format,
                         self.source])
 
+    def play_search(self):
+        search = f'ytsearch{self.number_to_play}:{self.source}'
+        search_command = [*self.search_base, '--get-url', search]
+        self.stream(search_command)
+
+    def play_channel(self):
+        channel = f'ytuser:{self.source}'
+        channel_command = [*self.search_base,
+                           '--max-downloads',
+                           f'{self.number_to_play}',
+                           '--get-url',
+                           channel]
+        self.stream(channel_command)
+
     def stream(self, command):
         results = subprocess.Popen(command, stdout=subprocess.PIPE)
         output, _ = results.communicate()
         to_play = output.split(b'\n')
         subprocess.run([*self.mpv, *to_play])
 
-    def play_search(self):
-        search = f'ytsearch{self.number_to_play}:{self.source}'
-        search_command = [*self.search_base, search]
-        self.stream(search_command)
-
-    def play_channel(self):
-        channel = f'ytuser:{self.channel}'
-        channel_command = [*self.search_base, channel]
-        self.stream(channel_command)
-
     def play_video(self):
-        play = {'file': self.play_local,
+        play = {
+                'file': self.play_local,
                 'url': self.play_url,
-                'search': self.play_search}
+                'search': self.play_search,
+                'channel': self.play_channel
+                }
         play[self.source_type]()
 
 
@@ -170,6 +176,9 @@ def main(argv):
     else:
         default_quality = app_config.get('video quality', DEFAULT['video quality'])
         video_format = VIDEO_QUALITY[default_quality]
+
+    if args.channel:
+        source_type = 'channel'
 
     PlayVideo(source,
               source_type,
