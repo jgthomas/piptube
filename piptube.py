@@ -12,23 +12,31 @@ from config import CONFIG, VIDEO, write_config_if_not_exists
 
 APP_NAME = VIDEO
 
-DEFAULT = {'video size': 'medium',
+DEFAULT = {
+        'video size': 'medium',
         'video quality': 'high',
         'position': 'bottom right',
-        'number to play': 5}
+        'number to play': 5
+        }
 
-VIDEO_SIZE = {'small': '384x216',
-              'medium': '640x360',
-              'large': '1280x720',
-              'extra large': '1920x1080'}
+VIDEO_SIZE = {
+        'small': '384x216',
+        'medium': '640x360',
+        'large': '1280x720',
+        'extra large': '1920x1080'
+        }
 
-VIDEO_POSITION = {'top left': '2%:2%',
-                  'top right': '98%:2%',
-                  'bottom right': '98%:98%',
-                  'bottom left': '2%:98%'}
+VIDEO_POSITION = {
+        'top left': '2%:2%',
+        'top right': '98%:2%',
+        'bottom right': '98%:98%',
+        'bottom left': '2%:98%'
+        }
 
-VIDEO_QUALITY = {'low': '(mp4)[height<=480]/best[height<=480]',
-                 'high': '(mp4)[height<=1080]/best[height<=1080]'}
+VIDEO_QUALITY = {
+        'low': '(mp4)[height<=480]/best[height<=480]',
+        'high': '(mp4)[height<=1080]/best[height<=1080]'
+        }
 
 
 def get_args(args):
