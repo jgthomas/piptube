@@ -80,9 +80,7 @@ class PlayVideo:
         self.video_format = f'{video_format}'
         self.number_to_play = number_to_play
         self.mpv = [*self.MPV_BASE, self.size, self.position]
-        self.search_base = ['youtube-dl',
-                            '--format',
-                            self.video_format]
+        self.search_base = ['youtube-dl', '--format', self.video_format]
         self.play_video()
 
     def play_local(self):
