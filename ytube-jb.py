@@ -12,7 +12,7 @@ from config import CONFIG, write_config_if_not_exists
 
 APP_NAME = 'ytube-jb'
 
-BASE = {'number': 5}
+BASE = {'number to play': 5}
 
 
 def get_args(args):
@@ -70,7 +70,7 @@ def main(argv):
     if args.number_to_play:
         number_to_play = args.number_to_play
     else:
-        number_to_play = app_config.get('number to play', BASE['number'])
+        number_to_play = app_config.get('number to play', BASE['number to play'])
 
     PlayAudio(source, source_type, number_to_play)
 
