@@ -137,6 +137,8 @@ def main(argv):
         source_type = 'file'
     elif re.match(r'^http', source):
         source_type = 'url'
+    elif args.channel:
+        source_type = 'channel'
     else:
         source_type = 'search'
 
@@ -174,9 +176,6 @@ def main(argv):
     else:
         default_quality = app_config.get('video quality', DEFAULT['video quality'])
         video_format = VIDEO_QUALITY[default_quality]
-
-    if args.channel:
-        source_type = 'channel'
 
     PlayVideo(source,
               source_type,
