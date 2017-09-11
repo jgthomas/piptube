@@ -44,6 +44,7 @@ def get_args(args):
     parser.add_argument('source', type=str, help='file or url to play')
     parser.add_argument('-n', '--number-to-play', type=int, help='number of videos to play', metavar='')
     parser.add_argument('-lq', '--low-quality', action='store_true', help='use a lower quality steam')
+    parser.add_argument('-c', '--channel', type=str, help='youtube channel to stream')
     size = parser.add_mutually_exclusive_group()
     size.add_argument('-s', '--small', action='store_true', help='small video')
     size.add_argument('-m', '--medium', action='store_true', help='medium video')
@@ -79,6 +80,10 @@ class PlayVideo:
         self.video_format = f'{video_format}'
         self.number_to_play = number_to_play
         self.mpv = [*self.MPV_BASE, self.size, self.position]
+        self.search_base = ['youtube-dl',
+                            '--format',
+                            self.video_format,
+                            '--get-url']
         self.play_video()
 
     def play_local(self):
@@ -91,23 +96,27 @@ class PlayVideo:
                         self.video_format,
                         self.source])
 
-    def play_search_result(self):
-        search = f'ytsearch{self.number_to_play}:{self.source}'
-        search_command = ['youtube-dl',
-                          '--format',
-                          self.video_format,
-                          '--get-url',
-                          search]
-        search_results = subprocess.Popen(search_command,
-                                          stdout=subprocess.PIPE)
-        output, _ = search_results.communicate()
+    def play_stream(self, results):
+        output, _ = results.communicate()
         to_play = output.split(b'\n')
         subprocess.run([*self.mpv, *to_play])
+
+    def play_search(self):
+        search = f'ytsearch{self.number_to_play}:{self.source}'
+        search_command = [*self.search_base, search]
+        search_results = subprocess.Popen(search_command, stdout=subprocess.PIPE)
+        self.play_stream(search_results)
+
+    def play_channel(self):
+        channel = f'ytuser:{self.channel}'
+        channel_command = [*self.search_base, channel]
+        channel_results = subprocess.Popen(channel_command, stdout=subprocess.PIPE)
+        self.play_stream(channel_results)
 
     def play_video(self):
         play = {'file': self.play_local,
                 'url': self.play_url,
-                'search': self.play_search_result}
+                'search': self.play_search}
         play[self.source_type]()
 
 
