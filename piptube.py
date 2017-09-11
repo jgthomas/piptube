@@ -96,7 +96,8 @@ class PlayVideo:
                         self.video_format,
                         self.source])
 
-    def stream(self, results):
+    def stream(self, command):
+        results = subprocess.Popen(command, stdout=subprocess.PIPE)
         output, _ = results.communicate()
         to_play = output.split(b'\n')
         subprocess.run([*self.mpv, *to_play])
@@ -104,14 +105,12 @@ class PlayVideo:
     def play_search(self):
         search = f'ytsearch{self.number_to_play}:{self.source}'
         search_command = [*self.search_base, search]
-        search_results = subprocess.Popen(search_command, stdout=subprocess.PIPE)
-        self.stream(search_results)
+        self.stream(search_command)
 
     def play_channel(self):
         channel = f'ytuser:{self.channel}'
         channel_command = [*self.search_base, channel]
-        channel_results = subprocess.Popen(channel_command, stdout=subprocess.PIPE)
-        self.stream(channel_results)
+        self.stream(channel_command)
 
     def play_video(self):
         play = {'file': self.play_local,
