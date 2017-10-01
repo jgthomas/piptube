@@ -110,7 +110,7 @@ class PlayVideo:
     def stream(self, command):
         results = subprocess.Popen(command, stdout=subprocess.PIPE)
         output, _ = results.communicate()
-        to_play = output.split(b'\n')
+        to_play = [video for video in output.split(b'\n') if video]
         subprocess.run([*self.mpv, *to_play])
 
     def play_video(self):
