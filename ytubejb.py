@@ -43,7 +43,7 @@ class PlayAudio:
         search_results = subprocess.Popen(search_command,
                                           stdout=subprocess.PIPE)
         output, _ = search_results.communicate()
-        to_play = output.split(b'\n')
+        to_play = [audio for audio in output.split(b'\n') if audio]
         subprocess.run(['mpv', *to_play])
 
     def play_audio(self):
