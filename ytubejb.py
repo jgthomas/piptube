@@ -53,7 +53,7 @@ class PlayAudio:
 
 
 def main(argv):
-    write_config_if_not_exists(CONFIG)
+    write_config_if_not_exists()
     config = configparser.ConfigParser()
     config.read(CONFIG)
     app_config = config[APP_NAME]
