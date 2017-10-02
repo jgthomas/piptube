@@ -6,7 +6,7 @@ import configparser
 
 CONFIG_FILE = 'piptube.ini'
 CONFIG_PATH = f"{os.environ['HOME']}/.config/piptube"
-CONFIG = '/'.join([CONFIG_PATH, CONFIG_FILE])
+CONFIG = os.path.join(CONFIG_PATH, CONFIG_FILE)
 VIDEO = 'piptube'
 AUDIO = 'ytubejb'
 
