@@ -43,7 +43,7 @@ def get_args(args):
     parser = argparse.ArgumentParser(description='Picture-in-picture video')
     parser.add_argument('source', type=str, help='file or url to play')
     parser.add_argument('-n', '--number-to-play', type=int, help='number of videos to play', metavar='')
-    parser.add_argument('-lq', '--low-quality', action='store_true', help='use a lower quality steam')
+    parser.add_argument('-lq', '--low-quality', action='store_true', help='use a lower quality stream')
     parser.add_argument('-c', '--channel', action='store_true', help='stream channel')
     size = parser.add_mutually_exclusive_group()
     size.add_argument('-s', '--small', action='store_true', help='small video')
