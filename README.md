@@ -43,3 +43,7 @@ ytubejb "ambient soundscapes"
 #### Command line and config file control of
 
 * Number of search results to play
+
+# Availability
+
+Arch Linux [in the AUR](https://aur.archlinux.org/packages/piptube/)
