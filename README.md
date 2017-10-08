@@ -18,6 +18,10 @@ piptube *youtube_video_url*
 
 piptube "dogs on skateboards"
 
+### All videos on a channel (starting with most recent)
+
+piptube -c computerphile
+
 #### Command line and config file options for
 
 * Position of floating video window
