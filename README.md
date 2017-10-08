@@ -20,7 +20,7 @@ piptube "dogs on skateboards"
 
 ### All videos on a channel (starting with most recent)
 
-piptube -c computerphile
+piptube -c *name_of_youtube_channel*
 
 #### Command line and config file options for
 
