@@ -6,19 +6,19 @@ Play local video files and video URLs in a floating, borderless, always-on-top m
 
 ![picture in picture](images/piptube_floating.png)
 
-### Play local video files
+### Local video files
 
 piptube *video_file.mp4*
 
-### Play specific video URL
+### Specific video URL
 
 piptube *youtube_video_url*
 
-### Play a sequence of YouTube search results
+### Sequence of YouTube search results
 
 piptube "dogs on skateboards"
 
-#### Command line and config file control of
+#### Command line and config file options for
 
 * Position of floating video window
 
@@ -32,15 +32,15 @@ piptube "dogs on skateboards"
 
 Use YouTube as a console-based jukebox
 
-### Play audio from specific URL
+### Audio from specific URL
 
 ytubejb *youtube_audio_url*
 
-### Play the results of a search
+### Sequence of YouTube search results
 
 ytubejb "ambient soundscapes"
 
-#### Command line and config file control of
+#### Command line and config file options for
 
 * Number of search results to play
 
