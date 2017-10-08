@@ -2,7 +2,7 @@
 
 Picture-in-picture video wrapper for mpv and youtube-dl
 
-Play local video files and video URLs in a floating, borderless, always-on-top mpv window.
+Play local video files and video URLs in a floating, borderless, always-on-top, mpv window.
 
 ![picture in picture](images/piptube_floating.png)
 
@@ -35,6 +35,8 @@ piptube -c *name_of_youtube_channel*
 # ytubejb
 
 Use YouTube as a console-based jukebox
+
+Play only the audio of the URL or search result
 
 ### Audio from specific URL
 
