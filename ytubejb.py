@@ -19,19 +19,21 @@ def get_args(args):
     parser = argparse.ArgumentParser(description='YouTube as a command line jukebox')
     parser.add_argument('source', type=str, help='file or url to play')
     parser.add_argument('-n', '--number-to-play', type=int, help='number of streams to play', metavar='')
+    parser.add_argument('-r', '--repeat', action='store_true', help='play the first audio on repeat')
     return parser.parse_args(args)
  
 
 class PlayAudio:
 
-    def __init__(self, source, source_type, number_to_play):
+    def __init__(self, source, source_type, mpv_command, number_to_play):
         self.source = source
         self.source_type = source_type
+        self.mpv_command = mpv_command
         self.number_to_play = number_to_play
         self.play_audio()
 
     def play_url(self):
-        subprocess.run(['mpv', '--no-video', self.source])
+        subprocess.run([*self.mpv_command, self.source])
 
     def play_search_result(self):
         search = f'ytsearch{self.number_to_play}:{self.source}'
@@ -44,7 +46,7 @@ class PlayAudio:
                                           stdout=subprocess.PIPE)
         output, _ = search_results.communicate()
         to_play = [audio for audio in output.split(b'\n') if audio]
-        subprocess.run(['mpv', *to_play])
+        subprocess.run([*self.mpv_command, *to_play])
 
     def play_audio(self):
         play = {'url': self.play_url,
@@ -62,6 +64,11 @@ def main(argv):
 
     source = args.source
 
+    mpv_command = ['mpv', '--no-video']
+
+    if args.repeat:
+        mpv_command.append('--loop')
+
     if re.match(r'^http', source):
         source_type = 'url'
     else:
@@ -72,7 +79,7 @@ def main(argv):
     else:
         number_to_play = app_config.get('number to play', DEFAULT['number to play'])
 
-    PlayAudio(source, source_type, number_to_play)
+    PlayAudio(source, source_type, mpv_command, number_to_play)
 
 
 if __name__ == '__main__':
