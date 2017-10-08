@@ -19,7 +19,9 @@ def get_args(args):
     parser = argparse.ArgumentParser(description='YouTube as a command line jukebox')
     parser.add_argument('source', type=str, help='file or url to play')
     parser.add_argument('-n', '--number-to-play', type=int, help='number of streams to play', metavar='')
-    parser.add_argument('-r', '--repeat', action='store_true', help='play the first audio on repeat')
+    repeater = parser.add_mutually_exclusive_group()
+    repeater.add_argument('-r', '--repeat', action='store_true', help='play the first audio on repeat')
+    repeater.add_argument('-ra', '--repeat-all', action='store_true', help='play all on repeat')
     return parser.parse_args(args)
  
 
@@ -68,6 +70,8 @@ def main(argv):
 
     if args.repeat:
         mpv_command.append('--loop')
+    elif args.repeat_all:
+        mpv_command.append('--loop-playlist')
 
     if re.match(r'^http', source):
         source_type = 'url'
