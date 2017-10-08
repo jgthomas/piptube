@@ -50,6 +50,8 @@ ytubejb "ambient soundscapes"
 
 * Number of search results to play
 
+* Playing audio on repeat
+
 # Availability
 
 Arch Linux [in the AUR](https://aur.archlinux.org/packages/piptube/)
