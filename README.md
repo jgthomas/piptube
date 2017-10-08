@@ -54,4 +54,4 @@ ytubejb "ambient soundscapes"
 
 # Availability
 
-Arch Linux [in the AUR](https://aur.archlinux.org/packages/piptube/)
+Arch Linux [package](https://aur.archlinux.org/packages/piptube/) in the AUR
