@@ -17,8 +17,11 @@ def write_config_if_not_exists():
     if not os.path.isfile(CONFIG):
         config = configparser.ConfigParser()
         config[VIDEO] = {}
+        config.set(VIDEO, '# initial location', 'top left, top right, bottom left, bottom right')
         config[VIDEO]['position'] = 'bottom right'
+        config.set(VIDEO, '# initial size', 'small, medium, large, extra large')
         config[VIDEO]['video size'] = 'medium'
+        config.set(VIDEO, '# quality', 'high (up to 1080p), low (480p)')
         config[VIDEO]['video quality'] = 'high'
         config[VIDEO]['number to play'] = '5'
         config[AUDIO] = {}

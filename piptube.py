@@ -40,7 +40,7 @@ VIDEO_QUALITY = {
 
 
 def get_args(args):
-    parser = argparse.ArgumentParser(description='Picture-in-picture video')
+    parser = argparse.ArgumentParser(description='Picture-in-picture video for mpv and YouTube')
     parser.add_argument('source', type=str, help='file or url to play')
     parser.add_argument('-n', '--number-to-play', type=int, help='number of videos to play', metavar='')
     parser.add_argument('-lq', '--low-quality', action='store_true', help='use a lower quality stream')
