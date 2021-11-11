@@ -89,8 +89,7 @@ class PlayVideo:
 
     def play_url(self):
         subprocess.run([*self.mpv,
-                        '--ytdl-format',
-                        self.video_format,
+                        f'--ytdl-format={self.video_format}',
                         self.source])
 
     def play_search(self):
